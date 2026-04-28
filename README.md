@@ -16,30 +16,21 @@ REST API для управления библиотечным каталогом
 | Lombok | 1.18.28 | Генерация кода |
 | Swagger/OpenAPI | 2.6.0 | Документация API |
 | JUnit 5 / Mockito | - | Тестирование |
-
 ## 📁 Структура проекта
-src/
-├── main/
-│   └── java/com/example/Library/
-│       ├── config/                    # Конфигурации (Redis, Cache)
-│       ├── Controller/                # REST контроллеры
-│       ├── Dto/                       # Data Transfer Objects
-│       ├── Entity/                    # JPA сущности
-│       ├── exception/                 # Глобальный обработчик ошибок
-│       ├── map/                       # MapStruct мапперы
-│       ├── Repository/                # JPA репозитории
-│       ├── Service/                   # Бизнес-логика
-│       └── LibraryApplication.java    # Точка входа
-│
-└── test/
-    └── java/com/example/Library/
-        ├── Controller/                # Тесты контроллеров
-        ├── Service/                   # Юнит-тесты сервисов
-        └── LibraryApplicationTests.java
-
+- **Library**
+  - `config` — конфигурация приложения (Redis)
+  - `controller` — REST API слой, обработка HTTP-запросов
+  - `dto` — объекты передачи данных (Request / Response модели)
+  - `entity` — JPA сущности, отображение таблиц базы данных
+  - `repository` — доступ к PostgreSQL через Spring Data JPA
+  - `service` — бизнес-логика приложения
+  - `mapper` — преобразование Entity ↔ DTO (MapStruct)
+  - `exception` — глобальная обработка ошибок и исключений
+  - `LibraryApplication` — точка входа в Spring Boot приложение
 ## 📖 API Эндпоинты
-Метод	Адрес	Что делает
-GET	/api/books/{id}	Получить книгу (с кэшем)
-GET	/api/books	Получить все книги
-POST	/api/books	Создать книгу
-DELETE	/api/books/{id}	Удалить книгу
+| **Метод**	 | **Адрес**| **Что делает**|
+|------------|--------|------------|
+|GET|	/api/books/{id}|	Получить книгу (с кэшем)|
+|GET|	/api/books	|Получить все книги|
+|POST|	/api/books|	Создать книгу|
+|DELETE|	/api/books/{id}	|Удалить книгу|
