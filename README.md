@@ -20,27 +20,26 @@ REST API для управления библиотечным каталогом
 ## 📁 Структура проекта
 src/
 ├── main/
-│ └── java/com/example/Library/
-│ ├── config/ # Конфигурации (Redis, Cache)
-│ ├── Controller/ # REST контроллеры
-│ ├── Dto/ # Data Transfer Objects
-│ ├── Entity/ # JPA сущности
-│ ├── exception/ # Глобальный обработчик ошибок
-│ ├── map/ # MapStruct мапперы
-│ ├── Repository/ # JPA репозитории
-│ ├── Service/ # Бизнес-логика
-│ └── LibraryApplication.java # Точка входа
+│   └── java/com/example/Library/
+│       ├── config/                    # Конфигурации (Redis, Cache)
+│       ├── Controller/                # REST контроллеры
+│       ├── Dto/                       # Data Transfer Objects
+│       ├── Entity/                    # JPA сущности
+│       ├── exception/                 # Глобальный обработчик ошибок
+│       ├── map/                       # MapStruct мапперы
+│       ├── Repository/                # JPA репозитории
+│       ├── Service/                   # Бизнес-логика
+│       └── LibraryApplication.java    # Точка входа
 │
 └── test/
-└── java/com/example/Library/
-├── Controller/ # Тесты контроллеров
-├── Service/ # Юнит-тесты сервисов
-└── LibraryApplicationTests.java
+    └── java/com/example/Library/
+        ├── Controller/                # Тесты контроллеров
+        ├── Service/                   # Юнит-тесты сервисов
+        └── LibraryApplicationTests.java
 
 ## 📖 API Эндпоинты
-Метод	Эндпоинт	Описание
-GET	/api/books/{id}	Получить книгу по ID (с кэшированием)
+Метод	Адрес	Что делает
+GET	/api/books/{id}	Получить книгу (с кэшем)
 GET	/api/books	Получить все книги
-POST	/api/books	Создать новую книгу
+POST	/api/books	Создать книгу
 DELETE	/api/books/{id}	Удалить книгу
-
