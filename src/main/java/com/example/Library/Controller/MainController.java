@@ -33,8 +33,8 @@ public class MainController {
     @GetMapping("/{id}")
     public BookResponse getBookById(@PathVariable Long id) {
         log.info("Get book by id={}",id);
-        BookEntity bookEntity = mainService.getBookById(id).orElseThrow(() -> new RuntimeException("Book id=" + id + " not found"));
-        return mapper.toBookResponseDto(bookEntity);
+        return mainService.getBookById(id);
+        
     }
 
     @PostMapping

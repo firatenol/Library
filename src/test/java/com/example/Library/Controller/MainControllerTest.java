@@ -1,4 +1,5 @@
 package com.example.Library.Controller;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
@@ -10,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
 import com.example.Library.Service.MainService;
 import com.example.Library.map.EntityMapper;
 import com.example.Library.Entity.BookEntity;
@@ -41,42 +43,33 @@ class MainControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    
     @Test
     void getBooks_shouldReturnList() throws Exception {
+
         BookEntity entity1 = new BookEntity();
         BookEntity entity2 = new BookEntity();
 
-        BookResponse response1 = BookResponse.builder()
-                .id(1L).label("A").author("Auth").genre("G").description("D")
-                .build();
-
-        BookResponse response2 = BookResponse.builder()
-                .id(2L).label("B").author("Auth").genre("G").description("D")
-                .build();
-
         when(mainService.getBooks()).thenReturn(List.of(entity1, entity2));
-        when(mapper.toBookResponseDto(entity1)).thenReturn(response1);
-        when(mapper.toBookResponseDto(entity2)).thenReturn(response2);
 
         mockMvc.perform(get("/api/books"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2));
+                .andExpect(jsonPath("$.length()").value(2));
 
         verify(mainService).getBooks();
     }
 
-    
     @Test
     void getBookById_shouldReturnBook() throws Exception {
-        BookEntity entity = new BookEntity();
 
         BookResponse response = BookResponse.builder()
-                .id(1L).label("A").author("Auth").genre("G").description("D")
+                .id(1L)
+                .label("A")
+                .author("Auth")
+                .genre("G")
+                .description("D")
                 .build();
 
-        when(mainService.getBookById(1L)).thenReturn(Optional.of(entity));
-        when(mapper.toBookResponseDto(entity)).thenReturn(response);
+        when(mainService.getBookById(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/books/1"))
                 .andExpect(status().isOk())
@@ -85,18 +78,19 @@ class MainControllerTest {
         verify(mainService).getBookById(1L);
     }
 
-    
     @Test
-    void getBookById_shouldThrowException_whenNotFound() throws Exception {
-        when(mainService.getBookById(1L)).thenReturn(Optional.empty());
+    void getBookById_shouldReturn404_whenNotFound() throws Exception {
+
+        when(mainService.getBookById(1L))
+                .thenThrow(new RuntimeException("Book not found"));
 
         mockMvc.perform(get("/api/books/1"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isNotFound());
     }
 
-    
     @Test
     void saveBook_shouldReturnCreatedBook() throws Exception {
+
         CreateBookRequestDto request = CreateBookRequestDto.builder()
                 .label("A")
                 .author("Auth")
@@ -112,7 +106,8 @@ class MainControllerTest {
                 .description("D")
                 .build();
 
-        when(mainService.save(any())).thenReturn(response);
+        when(mainService.save(any(CreateBookRequestDto.class)))
+                .thenReturn(response);
 
         mockMvc.perform(post("/api/books")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -120,6 +115,6 @@ class MainControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
-        verify(mainService).save(any());
+        verify(mainService).save(any(CreateBookRequestDto.class));
     }
 }

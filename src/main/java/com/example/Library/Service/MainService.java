@@ -1,7 +1,7 @@
 package com.example.Library.Service;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,14 +14,16 @@ import com.example.Library.map.EntityMapper;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class MainService {
     private final BookRepository repository;
     private final EntityMapper mapper;
 
-    public Optional<BookEntity> getBookById(Long id) {  
-        return repository.findById(id);
+    @Cacheable("library:books")
+    public BookResponse getBookById(Long id) {  
+        var entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+        return mapper.toBookResponseDto(entity);
     }
 
     public List<BookEntity> getBooks() {
@@ -33,6 +35,4 @@ public class MainService {
     BookEntity saved = repository.save(entity);
     return mapper.toBookResponseDto(saved);
     }
-
-
 }
